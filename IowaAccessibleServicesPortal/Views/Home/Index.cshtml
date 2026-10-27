@@ -1,0 +1,49 @@
+@model DashboardViewModel
+@{ ViewData["Title"] = "Requests dashboard"; }
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">Citizen services · Demo project</p>
+    <h1>Service requests</h1>
+    <p class="muted">Track and manage requests in one accessible interface.</p>
+  </div>
+  <a class="button primary" asp-action="Create">+ Create request</a>
+</div>
+@if (TempData["Success"] is string message)
+{
+  <div role="status" class="notice success">@message</div>
+}
+<section aria-labelledby="overview-title">
+  <h2 id="overview-title">Overview</h2>
+  <div class="metrics">
+    <div class="metric"><p>Total requests</p><strong>@Model.Total</strong></div>
+    <div class="metric"><p>Open requests</p><strong>@Model.Open</strong></div>
+    <div class="metric"><p>Completed</p><strong>@Model.Completed</strong></div>
+  </div>
+</section>
+<section class="panel" aria-labelledby="requests-title">
+  <div class="section-header"><h2 id="requests-title">Recent requests</h2><p class="muted">Search and filter sample records.</p></div>
+  <form asp-action="Index" method="get" class="filter-form" role="search">
+    <div class="field"><label for="search">Search by name, service, or ID</label><input id="search" name="search" type="search" maxlength="100" value="@Model.Search" /></div>
+    <div class="field"><label for="status">Request status</label><select id="status" name="status">
+      @foreach (var option in new[] { "All", "Submitted", "In progress", "Completed" })
+      { <option value="@option" selected="@(Model.StatusFilter == option)">@option</option> }
+    </select></div>
+    <button type="submit" class="button primary">Apply filters</button>
+    <a class="button secondary" asp-action="Index">Clear</a>
+  </form>
+  <p id="result-summary" role="status" class="results">Showing @Model.Requests.Count request(s).</p>
+  <div class="table-scroll" tabindex="0" role="region" aria-label="Service requests table, scrollable on small screens">
+    <table>
+      <caption>Requests matching the selected filters</caption>
+      <thead><tr><th scope="col">ID</th><th scope="col">Service</th><th scope="col">Requester</th><th scope="col">Submitted</th><th scope="col">Status</th></tr></thead>
+      <tbody>
+      @foreach (var request in Model.Requests)
+      {
+        <tr><th scope="row">#@request.Id</th><td>@request.Service</td><td>@request.Name</td><td><time datetime="@request.CreatedUtc.ToString("yyyy-MM-dd")">@request.CreatedUtc.ToString("MMM d, yyyy")</time></td><td><span class="status-badge">@request.Status</span></td></tr>
+      }
+      @if (!Model.Requests.Any())
+      { <tr><td colspan="5">No requests match your filters. Try a different search or select All.</td></tr> }
+      </tbody>
+    </table>
+  </div>
+</section>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>@ViewData["Title"] – Service Request Portal</title>
+  <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+  <script src="~/js/site.js" defer asp-append-version="true"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a asp-controller="Home" asp-action="Index" class="brand">Service Request Portal <span class="demo-tag">DEMO</span></a>
+      <nav aria-label="Primary navigation" class="navigation">
+        <a asp-controller="Home" asp-action="Index" aria-current="@(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "page" : null)">Requests</a>
+        <a asp-controller="Home" asp-action="Create" aria-current="@(ViewContext.RouteData.Values["action"]?.ToString() == "Create" ? "page" : null)">New request</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main-content" tabindex="-1" class="container main-content">
+    @RenderBody()
+  </main>
+  <footer class="footer container">Demonstration application · Not affiliated with the State of Iowa · Do not enter real personal information</footer>
+</body>
+</html>
